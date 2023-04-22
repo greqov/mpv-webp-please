@@ -160,21 +160,6 @@ function make_webp_internal(burn_subtitles)
         copyts = "-copyts"
     end
 
-    -- original command
-    -- args = {
-    --     options.ffmpeg_path, "-y", "-hide_banner", "-loglevel", "error",
-    --     "-ss", tostring(position),
-    --     -- copyts,
-    --     "-t", tostring(duration),
-    --     "-i", pathname,
-    --     "-lavfi", trim_filters,
-    --     "-lossless", tostring(options.lossless),
-    --     "-q:v", tostring(options.quality),
-    --     "-compression_level", tostring(options.compression_level),
-    --     "-loop", tostring(options.loop),
-    --     webpname
-    -- }
-
     local screenx, screeny, aspect = mp.get_osd_size()
 
     local rez = options.rez
@@ -196,6 +181,7 @@ function make_webp_internal(burn_subtitles)
         "-vf", "fps=".. fps .. ",scale=" .. rez .. ":-1:flags=lanczos",
         "-ss", tostring(position), "-t", tostring(duration),
         "-an",  -- remove audio
+        -- copyts, -- subtitles
         "-q:v", tostring(options.quality),
         "-compression_level", tostring(options.compression_level),
         "-y", webpname
