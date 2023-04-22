@@ -1,6 +1,5 @@
 -- Creates animated webp with mpv
 -- Requires ffmpeg
--- Usage: "w" to set start frame, "W" to set end frame, "Ctrl+w" to create
 
 require 'mp.options'
 local msg = require 'mp.msg'
@@ -216,7 +215,7 @@ function file_exists(name)
     if f~=nil then io.close(f) return true else return false end
 end
 
-mp.add_key_binding("F3", "set_webp_start", set_webp_start)
-mp.add_key_binding("F4", "set_webp_end", set_webp_end)
-mp.add_key_binding("F5", "make_webp", make_webp)
-mp.add_key_binding("Ctrl+W", "make_webp_with_subtitles", make_webp_with_subtitles) --only works with srt for now
+mp.add_key_binding("", "set_webp_start", set_webp_start)
+mp.add_key_binding("", "set_webp_end", set_webp_end)
+mp.add_key_binding("", "make_webp", make_webp)
+mp.add_key_binding("", "make_webp_with_subtitles", make_webp_with_subtitles) --only works with srt for now
