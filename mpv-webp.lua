@@ -160,27 +160,36 @@ function make_webp_internal(burn_subtitles)
         copyts = "-copyts"
     end
 
-    -- cmd = string.format("%s -y -hide_banner -loglevel error -ss %s %s -t %s -i '%s' -lavfi %s -lossless %s -q:v %s -compression_level %s -loop %s '%s'", options.ffmpeg_path, position, copyts, duration, pathname, trim_filters, options.lossless, options.quality, options.compression_level, options.loop, webpname)
-    -- args =  { '/bin/sh', '-c', cmd }
-    -- Example:
-    -- ffmpeg -i input_filename.mp4 -vcodec libwebp -filter:v fps=fps=20 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 800:600 output_filename.webp
+    -- original command
+    -- args = {
+    --     options.ffmpeg_path, "-y", "-hide_banner", "-loglevel", "error",
+    --     "-ss", tostring(position),
+    --     -- copyts,
+    --     "-t", tostring(duration),
+    --     "-i", pathname,
+    --     "-lavfi", trim_filters,
+    --     "-lossless", tostring(options.lossless),
+    --     "-q:v", tostring(options.quality),
+    --     "-compression_level", tostring(options.compression_level),
+    --     "-loop", tostring(options.loop),
+    --     webpname
+    -- }
 
-    scl = "scale=" .. options.rez .. ":-1"
-
-    args =  {
+    -- basic command
+    args = {
         "ffmpeg", "-v", "warning",
-        "-i", pathname, -- open files
+        "-i", pathname,
         "-vcodec", "libwebp",
-        "-filter:v", "fps=fps=20",
-        "-lossless", "0",
-        "-loop", "0",
-        "-preset", "default",
+        "-lossless", tostring(options.lossless),
+        "-loop", tostring(options.loop),
+        "-preset", "picture",
         "-vsync", "0",
-        "-vf", scl,
-        "-ss", tostring(position), "-t", tostring(duration),  -- define which part to use
+        "-vf", "fps=".. options.fps .. ",scale=" .. options.rez .. ":-1:flags=lanczos",
+        "-ss", tostring(position), "-t", tostring(duration),
         "-an",  -- remove audio
-        "-y", webpname  -- output
+        "-y", webpname
     }
+
     local screenx, screeny, aspect = mp.get_osd_size()
     mp.set_osd_ass(screenx, screeny, "{\\an9} creating...")
     local res = mp.command_native({name = "subprocess", capture_stdout = true, playback_only = false, args = args})
