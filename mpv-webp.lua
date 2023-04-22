@@ -17,7 +17,7 @@ local options = {
     loop = 0,
 }
 
-read_options(options, "webp")
+read_options(options, "mpv-webp")
 
 local fps
 
