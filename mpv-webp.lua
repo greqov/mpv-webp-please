@@ -187,6 +187,8 @@ function make_webp_internal(burn_subtitles)
         "-vf", "fps=".. options.fps .. ",scale=" .. options.rez .. ":-1:flags=lanczos",
         "-ss", tostring(position), "-t", tostring(duration),
         "-an",  -- remove audio
+        "-q:v", tostring(options.quality),
+        "-compression_level", tostring(options.compression_level),
         "-y", webpname
     }
 
