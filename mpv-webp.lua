@@ -34,6 +34,7 @@ filters=string.format("fps=%s,zscale='trunc(ih*dar/2)*2:trunc(ih/2)*2':f=spline3
 
 -- Setup output directory
 local output_directory = mp.command_native({ "expand-path", options.dir })
+
 --create output_directory if it doesn't exist
 if utils.readdir(output_directory) == nil then
     local args = { 'powershell', '-NoProfile', '-Command', 'mkdir', output_directory }
@@ -69,8 +70,8 @@ function make_webp_internal(burn_subtitles)
         return
     end
 
-    msg.info("Creating webP.")
-    mp.osd_message("Creating webP.")
+    msg.info("Creating webP...")
+    mp.osd_message("Creating webP...")
 
     -- shell escape
     function esc_for_sub(s)
@@ -185,12 +186,14 @@ function make_webp_internal(burn_subtitles)
     local res = mp.command_native({name = "subprocess", capture_stdout = true, playback_only = false, args = args})
     mp.set_osd_ass(screenx, screeny, "")
     if res.status ~= 0 then
-        msg.info("Failed to creat webP.")
+        msg.info("Failed to create webP.")
         mp.osd_message("Error creating webP, check console for more info.")
         return
     end
-    msg.info("webP created.")
-    mp.osd_message("webP created.")
+
+    local success_message = "webP created! " .. output_directory .. "/" .. webpname
+    msg.info(success_message)
+    mp.osd_message(success_message, 5)
 end
 
 function set_webp_start()
