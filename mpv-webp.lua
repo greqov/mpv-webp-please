@@ -35,7 +35,7 @@ filters=string.format("fps=%s,zscale='trunc(ih*dar/2)*2:trunc(ih/2)*2':f=spline3
 -- Setup output directory
 local output_directory = mp.command_native({ "expand-path", options.dir })
 
---create output_directory if it doesn't exist
+-- Create output_directory if it doesn't exist
 if utils.readdir(output_directory) == nil then
     local args = { 'mkdir', '-p', output_directory }
     local res = mp.command_native({name = "subprocess", capture_stdout = true, playback_only = false, args = args})
@@ -198,7 +198,7 @@ function make_webp_internal(burn_subtitles)
 
     local success_message = "webP created! " .. webpname
     msg.info(success_message)
-    mp.osd_message(success_message .. screenx, 5)
+    mp.osd_message(success_message, 5)
 end
 
 function set_webp_start()
