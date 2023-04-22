@@ -1,16 +1,6 @@
--- Original by Scheliux, Dragoner7 which was ported from Ruin0x11
--- Adapted to webp by DonCanjas
-
--- Create animated webps with mpv
--- Requires ffmpeg.
--- Adapted from https://github.com/Scheliux/mpv-gif-generator
--- Usage: "w" to set start frame, "W" to set end frame, "Ctrl+w" to create.
-
---  Note:
---     Requires FFmpeg in PATH environment variable or edit ffmpeg_path in the script options,
---     for example, by replacing "ffmpeg" with "C:\Programs\ffmpeg\bin\ffmpeg.exe"
---  Note: 
---     A small circle at the top-right corner is a sign that creat is happenning now.
+-- Creates animated webp with mpv
+-- Requires ffmpeg
+-- Usage: "w" to set start frame, "W" to set end frame, "Ctrl+w" to create
 
 require 'mp.options'
 local msg = require 'mp.msg'
@@ -18,7 +8,7 @@ local utils = require "mp.utils"
 
 local options = {
     ffmpeg_path = "ffmpeg",
-    dir = "~~desktop/",
+    dir = "~/",
     rez = 600,
     fps = 15,
     lossless = 0,
@@ -29,11 +19,9 @@ local options = {
 
 read_options(options, "webp")
 
-
 local fps
 
 -- Check for invalid fps values
--- Can you believe Lua doesn't have a proper ternary operator in the year of our lord 2020?
 if options.fps ~= nil and options.fps >= 1 and options.fps < 30 then
     fps = options.fps
 else
@@ -42,7 +30,7 @@ end
 
 -- Set this to the filters to pass into ffmpeg's -vf option.
 -- filters="fps=24,scale=320:-1:flags=spline"
-filters=string.format("fps=%s,zscale='trunc(ih*dar/2)*2:trunc(ih/2)*2':f=spline36,setsar=1/1,zscale=%s:-1:f=spline36", fps, options.rez)  
+filters=string.format("fps=%s,zscale='trunc(ih*dar/2)*2:trunc(ih/2)*2':f=spline36,setsar=1/1,zscale=%s:-1:f=spline36", fps, options.rez)
 
 -- Setup output directory
 local output_directory = mp.command_native({ "expand-path", options.dir })
@@ -65,14 +53,13 @@ end
 
 function make_webp()
     make_webp_internal(false)
-end    
+end
 
 function table_length(t)
     local count = 0
     for _ in pairs(t) do count = count + 1 end
     return count
 end
-
 
 function make_webp_internal(burn_subtitles)
     local start_time_l = start_time
@@ -108,7 +95,7 @@ function make_webp_internal(burn_subtitles)
         local i = 0
         local tracks_count = mp.get_property_number("track-list/count")
         local subs_array = {}
-        
+
         -- check for subtitle tracks
 
         while i < tracks_count do
@@ -172,10 +159,29 @@ function make_webp_internal(burn_subtitles)
         copyts = "-copyts"
     end
 
-    cmd = string.format("%s -y -hide_banner -loglevel error -ss %s %s -t %s -i '%s' -lavfi %s -lossless %s -q:v %s -compression_level %s -loop %s '%s'", options.ffmpeg_path, position, copyts, duration, pathname, trim_filters, options.lossless, options.quality, options.compression_level, options.loop, webpname)
-    args =  { 'powershell', '-NoProfile', '-Command', cmd }
+    -- cmd = string.format("%s -y -hide_banner -loglevel error -ss %s %s -t %s -i '%s' -lavfi %s -lossless %s -q:v %s -compression_level %s -loop %s '%s'", options.ffmpeg_path, position, copyts, duration, pathname, trim_filters, options.lossless, options.quality, options.compression_level, options.loop, webpname)
+    -- args =  { '/bin/sh', '-c', cmd }
+    -- Example:
+    -- ffmpeg -i input_filename.mp4 -vcodec libwebp -filter:v fps=fps=20 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 800:600 output_filename.webp
+
+    scl = "scale=" .. options.rez .. ":-1"
+
+    args =  {
+        "ffmpeg", "-v", "warning",
+        "-i", pathname, -- open files
+        "-vcodec", "libwebp",
+        "-filter:v", "fps=fps=20",
+        "-lossless", "0",
+        "-loop", "0",
+        "-preset", "default",
+        "-vsync", "0",
+        "-vf", scl,
+        "-ss", tostring(position), "-t", tostring(duration),  -- define which part to use
+        "-an",  -- remove audio
+        "-y", webpname  -- output
+    }
     local screenx, screeny, aspect = mp.get_osd_size()
-    mp.set_osd_ass(screenx, screeny, "{\\an9}● ")
+    mp.set_osd_ass(screenx, screeny, "{\\an9} creating...")
     local res = mp.command_native({name = "subprocess", capture_stdout = true, playback_only = false, args = args})
     mp.set_osd_ass(screenx, screeny, "")
     if res.status ~= 0 then
@@ -202,7 +208,7 @@ function file_exists(name)
     if f~=nil then io.close(f) return true else return false end
 end
 
-mp.add_key_binding("w", "set_webp_start", set_webp_start)
-mp.add_key_binding("W", "set_webp_end", set_webp_end)
-mp.add_key_binding("Ctrl+w", "make_webp", make_webp)
+mp.add_key_binding("F3", "set_webp_start", set_webp_start)
+mp.add_key_binding("F4", "set_webp_end", set_webp_end)
+mp.add_key_binding("F5", "make_webp", make_webp)
 mp.add_key_binding("Ctrl+W", "make_webp_with_subtitles", make_webp_with_subtitles) --only works with srt for now

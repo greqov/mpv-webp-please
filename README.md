@@ -1,48 +1,46 @@
-# mpv-webp-generator *for windows*
-Creates high quality animated webp using mpv hotkeys
+# mpv webp plugin _for linux_
 
-![Fruits Basket Season 2](https://files.catbox.moe/rt0czz.webp)
+Lame implementation of mpv webp plugin for linux.
 
-Based on [Scheliux](https://github.com/Scheliux/)'s [gif generator](https://gist.github.com/Ruin0x11/8fae0a9341b41015935f76f913b28d2a) port to windows, which you cand find [here](https://github.com/Scheliux/mpv-gif-generator).
+Creates high quality animated webp using mpv hotkeys. Based on [mpv webp generator for windows](https://github.com/DonCanjas/mpv-webp-generator).
 
-Thanks to July who helped me with ffmpeg's parameters.
+<!-- add result image -->
 
-# Requirements 
-- Windows
+## Requirements
+
 - mpv
 - ffmpeg
 
-# Installation
+## Installation
 
-First of all, you must make sure `ffmpeg` is in your `%PATH%` and accesible via your command line. After ensuring this, clone or download as zip. Then, head to `%APPDATA%/mpv/scripts` and place `mpv-webp.lua` in there; if neither `%APPDATA%/mpv` nor `%APPDATA%/mpv/scripts` exist, you will have to create them. It's as easy as that!
+Place `mpv-webp.lua` in `~/.config/mpv/scripts/` folder.
 
-[How to install ffmpeg](https://www.wikihow.com/Install-FFmpeg-on-Windows)
+<!-- old README below -->
 
-# Configuration
-*Note this is still in progress and might not work properly*
+## Configuration
 
-The three options the script offers (at least for now) are:
+The three options the script offers are:
 
-* `dir` – Sets the output directory. Default is `C:\Users\%USERNAME%\Desktop\`.
-* `rez` – Sets the resolution of the output webp. Default is 600 width.
-* `fps` – Sets the framerate of the output webp. Default is 15. Don't go too overboard or the filesize will balloon.
+- `dir` – Sets the output directory. Default is `~/`. _Note:_ make sure that custom directory exists.
+- `rez` – Sets the resolution of the output webp. Default is 600 width.
+- `fps` – Sets the framerate of the output webp. Default is 15.
 
-# webp settings
-* `qscale` - set as 90 out of 100. It will determine the quality of the webp. Not recommended to go lower than 85. 
-* `lossless` - set as 0 by default (lossy), change to 1 for lossless. When doing a lossless export, `qscale` will no longer determine the quality, but the encoding eficiency.
-* `compression_level` - set as 6 out of 6. The process might take a while, so if you don't want to wait, you should lower it, but the lower the value, the bigger the filesize.
+## webp settings
+
+- `qscale` - set as 90 out of 100. It will determine the quality of the webp. Not recommended to go lower than 85.
+- `lossless` - set as 0 by default (lossy), change to 1 for lossless. When doing a lossless export, `qscale` will no longer determine the quality, but the encoding eficiency.
+- `compression_level` - set as 6 out of 6. The process might take a while, so if you don't want to wait, you should lower it, but the lower the value, the bigger the filesize.
 
 ## Usage
-You can use `,` and `.` to rewind or foward one frame at a time in order to select the desired starting and ending frames of the webp. You only need to define the start and ending times and to choose if exporting with or without subtitles. In order to do that, you can use the following hotkeys: 
 
-* `w` - Start time
-* `W` - End time
-* `CTRL+w` - Export webp
-* `CTRL+W` - Export webp with subtitles  - *only works with srt*
+You can use `,` and `.` to rewind or foward one frame at a time in order to select the desired starting and ending frames of the webp. You only need to define the start and ending times and to choose if exporting with or without subtitles. In order to do that, you can use the following hotkeys:
 
-## Stuff to do
-If you wish to contribute, here are some suggestions:
+- `w` - Start time
+- `W` - End time
+- `CTRL+w` - Export webp
+- `CTRL+W` - Export webp with subtitles - _only works with srt_
 
-* Remake the section that handles hardsubbing to support not only srt, but also ass/ssa while keeping its styles.
-* Add support for a config file to customize not only webp's settings, but also keybindings and output directory. (at least I can't make it work on my pc)
-* Add automatic crop to crop black borders out of video without interfering with DAR. User must be able to enable and disable this feature via .conf file.
+## TODO
+
+- [ ] move preferences to config file + keybindings
+- [ ] restore subtitles option
