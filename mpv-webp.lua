@@ -175,6 +175,15 @@ function make_webp_internal(burn_subtitles)
     --     webpname
     -- }
 
+    local screenx, screeny, aspect = mp.get_osd_size()
+
+    local rez = options.rez
+
+    -- don't scale up small resolutions
+    if screenx < rez then
+        rez = screenx
+    end
+
     -- basic command
     args = {
         "ffmpeg", "-v", "warning",
@@ -184,7 +193,7 @@ function make_webp_internal(burn_subtitles)
         "-loop", tostring(options.loop),
         "-preset", "picture",
         "-vsync", "0",
-        "-vf", "fps=".. options.fps .. ",scale=" .. options.rez .. ":-1:flags=lanczos",
+        "-vf", "fps=".. fps .. ",scale=" .. rez .. ":-1:flags=lanczos",
         "-ss", tostring(position), "-t", tostring(duration),
         "-an",  -- remove audio
         "-q:v", tostring(options.quality),
@@ -192,7 +201,6 @@ function make_webp_internal(burn_subtitles)
         "-y", webpname
     }
 
-    local screenx, screeny, aspect = mp.get_osd_size()
     mp.set_osd_ass(screenx, screeny, "{\\an9} creating...")
     local res = mp.command_native({name = "subprocess", capture_stdout = true, playback_only = false, args = args})
     mp.set_osd_ass(screenx, screeny, "")
@@ -204,7 +212,7 @@ function make_webp_internal(burn_subtitles)
 
     local success_message = "webP created! " .. output_directory .. "/" .. webpname
     msg.info(success_message)
-    mp.osd_message(success_message, 5)
+    mp.osd_message(success_message .. screenx, 5)
 end
 
 function set_webp_start()
