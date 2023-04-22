@@ -171,7 +171,7 @@ function make_webp_internal(burn_subtitles)
 
     -- basic command
     args = {
-        "ffmpeg", "-v", "warning",
+        options.ffmpeg_path, "-v", "warning",
         "-i", pathname,
         "-vcodec", "libwebp",
         "-lossless", tostring(options.lossless),
