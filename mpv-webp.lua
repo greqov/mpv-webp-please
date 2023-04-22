@@ -37,7 +37,7 @@ local output_directory = mp.command_native({ "expand-path", options.dir })
 
 --create output_directory if it doesn't exist
 if utils.readdir(output_directory) == nil then
-    local args = { 'powershell', '-NoProfile', '-Command', 'mkdir', output_directory }
+    local args = { 'mkdir', '-p', output_directory }
     local res = mp.command_native({name = "subprocess", capture_stdout = true, playback_only = false, args = args})
     if res.status ~= 0 then
         msg.error("Failed to create webp_dir save directory "..output_directory..". Error: "..(res.error or "unknown"))
@@ -196,7 +196,7 @@ function make_webp_internal(burn_subtitles)
         return
     end
 
-    local success_message = "webP created! " .. output_directory .. "/" .. webpname
+    local success_message = "webP created! " .. webpname
     msg.info(success_message)
     mp.osd_message(success_message .. screenx, 5)
 end
