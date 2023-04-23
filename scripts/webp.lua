@@ -168,7 +168,6 @@ function make_webp_internal(burn_subtitles)
         rez = screenx
     end
 
-    -- basic command
     args = {
         options.ffmpeg_path, "-v", "warning",
         "-i", pathname,
