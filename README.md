@@ -13,34 +13,45 @@ Creates high quality animated webp using mpv hotkeys. Based on [mpv webp generat
 
 ## Installation
 
-Place `mpv-webp.lua` in `~/.config/mpv/scripts/` folder.
+Copy `scripts`, `script-opts` folders to `~/.config/mpv/`.
 
-<!-- old README below -->
+```bash
+cp -r scripts script-opts ~/.config/mpv/
+```
 
 ## Configuration
 
-The three options the script offers are:
+Edit preferences in `~/.config/mpv/script-opts/webp.conf` file.
 
-- `dir` – Sets the output directory. Default is `~/`. _Note:_ make sure that custom directory exists.
-- `rez` – Sets the resolution of the output webp. Default is 600 width.
-- `fps` – Sets the framerate of the output webp. Default is 15.
+- `ffmpeg_path` - path to ffmpeg.
+- `dir` - sets the output directory. Default is `~/`.
+- `rez` - sets the resolution of the output webp. Default is `600` width.
+- `fps` - sets the framerate of the output webp. Default is `15`.
+- `lossless` - set as `0` by default (lossy), change to `1` for lossless. When doing a lossless export, `quality` will no longer determine the quality, but the encoding efficiency.
+- `quality` - set as `90` out of `100`. It will determine the quality of the webp.
+- `compression_level` - set as `6` out of `6`. The process might take a while, so if you don't want to wait, you should lower it, but the lower the value, the bigger the filesize.
+- `loop` - number of loops. Use `0` to loop forever, or a specific number of loops. Default is `0`.
 
-## webp settings
+## Keybindings
 
-- `qscale` - set as 90 out of 100. It will determine the quality of the webp. Not recommended to go lower than 85.
-- `lossless` - set as 0 by default (lossy), change to 1 for lossless. When doing a lossless export, `qscale` will no longer determine the quality, but the encoding eficiency.
-- `compression_level` - set as 6 out of 6. The process might take a while, so if you don't want to wait, you should lower it, but the lower the value, the bigger the filesize.
+Plugin provides 3 new commands: `set_webp_start`, `set_webp_end`, `make_webp`.
+Set custom hotkeys in `~/.config/mpv/input.conf` file like so:
+
+```
+# webp bindings
+F3  script-binding set_webp_start
+F4  script-binding set_webp_end
+F5  script-binding make_webp
+```
+
+_NOTE:_ if you don't have `input.conf` file, copy [default one](https://github.com/mpv-player/mpv/blob/master/etc/input.conf).
 
 ## Usage
 
-You can use `,` and `.` to rewind or foward one frame at a time in order to select the desired starting and ending frames of the webp. You only need to define the start and ending times and to choose if exporting with or without subtitles. In order to do that, you can use the following hotkeys:
+Use hotkeys to define start/end timestamps and generate an image. Title "creating..." at the top right corner indicates that the webp is generating. It may takes a while, so be patient.
 
-- `w` - Start time
-- `W` - End time
-- `CTRL+w` - Export webp
-- `CTRL+W` - Export webp with subtitles - _only works with srt_
+Use `,` and `.` keys to rewind/foward 1 frame at a time in order to select the desired starting and ending frames of the webp.
 
 ## TODO
 
-- [ ] move preferences to config file + keybindings
 - [ ] restore subtitles option
